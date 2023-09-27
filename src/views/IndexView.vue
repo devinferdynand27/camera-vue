@@ -8,25 +8,21 @@
       Buka Kamera
     </button>
     <button
+      @click="tutupkamera"
       class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
     >
       Tutup Kamera
     </button>
-    <br /><br />
+
     <img :src="imgs" alt="Screenshot" />
-    <video
-      ref="videoElement"
-      autoplay
-      style="border-radius: 20px; height: 10%"
-    ></video>
-    <br />
+    <video ref="videoElement" autoplay></video>
+
     <button
       @click="sekrinsut"
       class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
     >
       Sekrinsut
     </button>
-    <br /><br />
 
     <button
       @click="ulangi"
@@ -34,14 +30,13 @@
     >
       Ulangi
     </button>
-    {{ ulangis }}
   </center>
 </template>
 
 <script>
 export default {
   data() {
-    return { stream: null, imgs: null };
+    return { stream: null, imgs: null, opencamera: true };
   },
   methods: {
     bukakamera() {
@@ -61,6 +56,7 @@ export default {
         this.stream.getTracks().forEach((track) => track.stop());
         this.$refs.videoElement.srcObject = null;
       }
+      this.opencamera = true;
     },
     sekrinsut() {
       const video = this.$refs.videoElement;
