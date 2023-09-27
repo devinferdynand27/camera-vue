@@ -1,46 +1,50 @@
 <template>
-  <br />
-  <center>
-    <button
-      @click="bukakamera"
-      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-    >
-      Buka Kamera
-    </button>
-    <button
-      @click="tutupkamera"
-      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-    >
-      Tutup Kamera
-    </button>
+  <div>
+    <center>
+      <button
+        v-if="cameraOpen === false"
+        @click="bukaKamera"
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Buka Kamera
+      </button>
+      <button
+        v-else
+        @click="tutupKamera"
+        class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Tutup Kamera
+      </button>
 
-    <img :src="imgs" alt="Screenshot" />
-    <video ref="videoElement" autoplay></video>
+      <img v-if="ulangis === false" :src="imgSrc" alt="Screenshot" />
+      <img v-else :src="imgSrc" alt="Screenshot" />
+      <video ref="videoElement" autoplay></video>
 
-    <button
-      @click="sekrinsut"
-      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-    >
-      Sekrinsut
-    </button>
+      <button
+        @click="ambilScreenshot"
+        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Ambil Screenshot
+      </button>
 
-    <button
-      @click="ulangi"
-      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-    >
-      Ulangi
-    </button>
-  </center>
+      <button
+        @click="ulangi"
+        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Ulangi
+      </button>
+    </center>
+  </div>
 </template>
 
 <script>
 export default {
   data() {
-    return { stream: null, imgs: null, opencamera: true };
+    return { stream: null, imgSrc: null, cameraOpen: false, ulangis: false };
   },
   methods: {
-    bukakamera() {
-      this.opencamera = false;
+    bukaKamera() {
+      this.cameraOpen = true;
       navigator.mediaDevices
         .getUserMedia({ video: true })
         .then((stream) => {
@@ -51,14 +55,14 @@ export default {
           console.error("Error accessing camera:", error);
         });
     },
-    tutupkamera() {
+    tutupKamera() {
       if (this.stream) {
         this.stream.getTracks().forEach((track) => track.stop());
         this.$refs.videoElement.srcObject = null;
       }
-      this.opencamera = true;
+      this.cameraOpen = false;
     },
-    sekrinsut() {
+    ambilScreenshot() {
       const video = this.$refs.videoElement;
       const canvas = document.createElement("canvas");
       canvas.width = video.videoWidth;
@@ -66,11 +70,13 @@ export default {
       const context = canvas.getContext("2d");
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
       const dataURL = canvas.toDataURL("image/png");
-      this.imgs = dataURL;
-      this.tutupkamera();
+      this.imgSrc = dataURL;
+      this.tutupKamera();
     },
     ulangi() {
-      this.bukakamera(); // This method reopens the camera.
+      this.imgSrc = null; // Menghapus gambar yang ada
+      this.bukaKamera();
+      this.ulangis = true;
     },
   },
 };
