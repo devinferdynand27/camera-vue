@@ -20,15 +20,31 @@
           Tutup Kamera
         </button>
         <br /><br />
-        <img v-if="ulangis === false" :src="imgSrc" />
-        <img v-else :src="imgSrc" /><br />
-
-        <video
-          ref="videoElement"
-          autoplay
-          style="border-radius: 20px; transform: scaleX(-1)"
-        ></video>
+        <img
+          v-if="ulangis === false"
+          style="transform: scaleX(-1)"
+          :src="imgSrc"
+        />
+        <img v-else :src="imgSrc" style="transform: scaleX(-1)" /><br />
+        <div v-if="cameraOpen == true">
+          <video
+            v-if="cameras == true"
+            ref="videoElement"
+            autoplay
+            style="border-radius: 20px; transform: scaleX(-1)"
+          ></video>
+        </div>
         <br />
+        <span v-if="cameras == true">
+          <button
+            v-if="ambilscrinsut == true"
+            @click="ulangi"
+            style="width: 32%"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            > Ulangi
+          </button>
+        </span>
 
         <div v-if="cameras == true">
           <span>
@@ -41,20 +57,12 @@
               Ambil Screenshot
             </button>
             &nbsp;
-            <button
-              @click="ulangi"
-              style="width: 32%"
-              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            >
-              Ulangi
-            </button>
           </span>
         </div>
       </center>
     </div>
   </center>
 </template>
-
 <script>
 export default {
   data() {
